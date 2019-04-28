@@ -27,6 +27,7 @@ void setup() {
 }
 
 void loop() {
+    hypnotoad(6000);
     infinityLoop(6000);
     rainbow2D(6000);
     larsonScanner(6000);
@@ -36,6 +37,25 @@ void loop() {
     police(2000);
 
 //    scanners(2000);
+}
+
+void hypnotoad(unsigned long duration_ms) {
+    unsigned long t, until = millis() + duration_ms;
+    while ((t = millis()) < until) {
+        for (uint16_t i = 0; i < 32; i++) {
+            uint8_t x, y;
+            xy(i, &x, &y);
+
+            long phase = 255 * (i<16);
+            int16_t tt = abs((long)(t/2 + phase) % 511 - 255);
+            uint8_t core = max(0, (256 - abs(y - 127)) - tt);
+
+            uint8_t flash = 255 * (core/8) * (t%300 < 10);
+            uint32_t c = strip.Color(core, (core>>1) * (core<127), flash);
+            strip.setPixelColor(i, c);
+        }
+        strip.show();
+    }
 }
 
 void infinityLoop(unsigned long duration_ms) {
